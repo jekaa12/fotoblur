@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foto Kita - Peace Blur Photo Booth</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+
+        :root {
+            --red: #e63946;
+            --dark-red: #c1121f;
+            --black: #1d1d1d;
+            --white: #ffffff;
+            --cream: #fff5f5;
+            --pink: #ffccd5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            background-image:
+                radial-gradient(circle, var(--pink) 2px, transparent 2px);
+            background-size: 30px 30px;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Header --- */
+        header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 30px 20px 10px;
+        }
+
+        .logo {
+            display: inline-block;
+            background: var(--red);
+            color: var(--white);
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.5rem;
+            padding: 12px 40px;
+            border-radius: 50px;
+            box-shadow: 0 6px 0 var(--dark-red), 0 8px 20px rgba(0,0,0,0.15);
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .logo::before, .logo::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            background: var(--white);
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .logo::before { left: 15px; }
+        .logo::after { right: 15px; }
+
+        .subtitle {
+            margin-top: 12px;
+            font-size: 1.1rem;
+            color: var(--black);
+            font-weight: 700;
+        }
+
+        .subtitle span {
+            background: var(--black);
+            color: var(--white);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-left: 8px;
+        }
+
+        /* --- Main layout --- */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 30px 20px 60px;
+            flex-wrap: wrap;
+        }
+
+        /* --- Photo Booth Frame --- */
+        .booth-frame {
+            background: var(--black);
+            border-radius: 24px;
+            padding: 16px;
+            box-shadow:
+                0 10px 40px rgba(0,0,0,0.25),
+                inset 0 0 0 4px var(--red);
+            position: relative;
+            max-width: 960px;
+            width: 100%;
+        }
+
+        .booth-frame::before {
+            content: '● REC';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--red);
+            color: var(--white);
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 900;
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .booth-frame::after {
+            content: '';
+            position: absolute;
+            top: -14px;
+            left: 24px;
+            width: 18px;
+            height: 18px;
+            background: var(--red);
+            border-radius: 50%;
+            border: 3px solid var(--black);
+        }
+
+        .video-wrapper {
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+            aspect-ratio: 4/3;
+        }
+
+        .video-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Corner decorations inside video */
+        .corner-deco {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--red);
+            pointer-events: none;
+        }
+        .corner-tl { top: 10px; left: 10px; border-right: none; border-bottom: none; border-radius: 8px 0 0 0; }
+        .corner-tr { top: 10px; right: 10px; border-left: none; border-bottom: none; border-radius: 0 8px 0 0; }
+        .corner-bl { bottom: 10px; left: 10px; border-right: none; border-top: none; border-radius: 0 0 0 8px; }
+        .corner-br { bottom: 10px; right: 10px; border-left: none; border-top: none; border-radius: 0 0 8px 0; }
+
+        /* --- Side Panel --- */
+        .side-panel {
+            max-width: 320px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .info-card {
+            background: var(--white);
+            border: 3px solid var(--black);
+            border-radius: 20px;
+            padding: 22px;
+            box-shadow: 4px 4px 0 var(--black);
+        }
+
+        .info-card h3 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--red);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-card p, .info-card li, .info-card select {
+            font-size: 0.95rem;
+            color: var(--black);
+            line-height: 1.6;
+        }
+
+        .camera-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 3px solid var(--black);
+            border-radius: 12px;
+            background: var(--cream);
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--black);
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231d1d1d' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .camera-select:focus {
+            border-color: var(--red);
+        }
+
+        .info-card ul {
+            padding-left: 20px;
+        }
+
+        .info-card li {
+            margin-bottom: 4px;
+        }
+
+        /* --- Status badge --- */
+        .status-card {
+            background: var(--red);
+            color: var(--white);
+            border: 3px solid var(--black);
+            border-radius: 20px;
+            padding: 18px 22px;
+            box-shadow: 4px 4px 0 var(--black);
+            text-align: center;
+        }
+
+        .status-card h3 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #70ff70;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: blink 1s infinite;
+        }
+
+        /* --- Photo strip decoration --- */
+        .photo-strip {
+            background: var(--white);
+            border: 3px solid var(--black);
+            border-radius: 16px;
+            padding: 14px;
+            box-shadow: 4px 4px 0 var(--black);
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .strip-slot {
+            width: 60px;
+            height: 75px;
+            border: 2px dashed var(--red);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            background: var(--cream);
+        }
+
+        /* --- Capture button --- */
+        .capture-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--red);
+            color: var(--white);
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.3rem;
+            border: 3px solid var(--black);
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 var(--black);
+            transition: all 0.15s;
+            letter-spacing: 1px;
+        }
+
+        .capture-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 var(--black);
+        }
+
+        .capture-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0 var(--black);
+        }
+
+        /* --- Footer --- */
+        footer {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 10px 20px 30px;
+            font-size: 0.85rem;
+            color: var(--black);
+        }
+
+        footer span {
+            color: var(--red);
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; align-items: center; }
+            .logo { font-size: 1.8rem; padding: 10px 28px; }
+            .side-panel { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">FOTO KITA</div>
+        <p class="subtitle">Peace Blur Photo Booth <span>LIVE</span></p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+
+        <!-- Camera Frame -->
+        <div class="booth-frame">
+            <div class="video-wrapper">
+                <img src="/video_feed" alt="Camera Feed" />
+                <div class="corner-deco corner-tl"></div>
+                <div class="corner-deco corner-tr"></div>
+                <div class="corner-deco corner-bl"></div>
+                <div class="corner-deco corner-br"></div>
+            </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div class="side-panel">
+
+            <!-- Status -->
+            <div class="status-card">
+                <h3><span class="status-dot"></span> Camera Active</h3>
+                <p>Show your peace sign to activate blur!</p>
+            </div>
+
+            <!-- Camera Source -->
+            <div class="info-card">
+                <h3>Camera Source</h3>
+                <select id="cameraSelect" class="camera-select">
+                    <option value="0">Loading cameras...</option>
+                </select>
+            </div>
+
+            <!-- How to use -->
+            <div class="info-card">
+                <h3>How to Play</h3>
+                <ul>
+                    <li>Show a <strong>peace sign</strong> to the camera</li>
+                    <li>The screen will <strong>blur</strong> instantly!</li>
+                    <li>Hide peace sign to go back to normal</li>
+                    <li>Have fun & take cute photos!</li>
+                </ul>
+            </div>
+
+            <!-- Tips -->
+            <div class="info-card">
+                <h3>Tips</h3>
+                <p>Keep your hand steady and make sure your index and middle fingers are clearly visible. Good lighting helps the detector work better!</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Made with <span>love</span> by <strong>Foto Kita</strong> &mdash; Peace Blur Photo Booth &copy; 2026
+    </footer>
+
+</body>
+
+<script>
+    const select = document.getElementById('cameraSelect');
+
+    async function loadCameras() {
+        const res = await fetch('/cameras');
+        const data = await res.json();
+        select.innerHTML = '';
+        data.cameras.forEach(cam => {
+            const opt = document.createElement('option');
+            opt.value = cam.id;
+            opt.textContent = cam.name;
+            if (cam.id === data.current) opt.selected = true;
+            select.appendChild(opt);
+        });
+    }
+
+    select.addEventListener('change', async () => {
+        const camId = parseInt(select.value);
+        await fetch('/switch_camera', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ camera_id: camId })
+        });
+        // Reload video feed
+        const img = document.querySelector('.video-wrapper img');
+        img.src = '/video_feed?' + Date.now();
+    });
+
+    loadCameras();
+</script>
+</html>
